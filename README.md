@@ -416,6 +416,36 @@ pkill -f tp_generate.py; ssh 192.168.20.2 'pkill -f tp_generate.py'
 | HF: "Invalid username or password" | Repo inesistente o gated | `curl` con token (sezione 4), controllare il nome |
 | Memoria esaurita | Pesi + KV cache oltre il limite | `iogpu.wired_limit_mb`, `--kv-bits 8`, `--max-kv-size` |
 
+## Connettere con Claude Code
+Installare un proxy:
+```
+git clone https://github.com/dorigoa/claude-code-mlx-proxy.git   && cd claude-code-mlx-proxy && ls -1 && (command -v uv && uv --version || echo "uv ASSENTE")
+```
+deve stampare la versione uv disponibile (altrimenti: `python -m pip install uv`)
+
+Creare il file `.env`:
+```
+# .env - Example configuration for the proxy server
+HOST=127.0.0.1
+PORT=8888
+# URL of the mlx-lm OpenAI-compatible server (must include /v1)
+MLX_SERVER_URL=http://<HOSTIP_DOVE_GIRA_MLX-SERVER>:8080/v1
+# API-exposed model name (what Claude Code sees)
+API_MODEL_NAME=claude-4-sonnet-20250514
+# Tool mode: full / slim / none
+# TOOL_MODE=slim
+# Enable verbose debug logging
+VERBOSE=true
+```
+Quindi scaricare i pacchetti:
+```
+uv sync
+```
+Runnare il proxy:
+```
+uv run main.py
+```
+
 ## 12. Glossario e riferimenti
 
 | Sigla | Significato |

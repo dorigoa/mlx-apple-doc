@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8888",
+    "ANTHROPIC_AUTH_TOKEN": "local-mlx",
+    "ANTHROPIC_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "mlx-community/Qwen3.8-27B-4bit",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "8192",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "65536",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
