@@ -301,8 +301,7 @@ Le due dimensioni devono coincidere (29 GB per questo modello).
 Lancio:
 
 ```bash
-~/mlx-dist/tp.sh --model mlx-community/Qwen3.6-27B-8bit \
-  --prompt "Spiega in 5 frasi il teorema del viriale." --max-tokens 512
+~/mlx-dist/tp.sh --model $M --prompt "Spiega in 5 frasi il teorema del viriale." --max-tokens 2048
 ```
 
 Risultati misurati:
