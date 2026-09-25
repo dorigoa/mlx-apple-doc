@@ -429,13 +429,14 @@ Creare il file `.env`:
 HOST=127.0.0.1
 PORT=8888
 # URL of the mlx-lm OpenAI-compatible server (must include /v1)
-MLX_SERVER_URL=http://<HOSTIP_DOVE_GIRA_MLX-SERVER>:8080/v1
+MLX_SERVER_URL=http://192.168.1.101:8080/v1
 # API-exposed model name (what Claude Code sees)
 API_MODEL_NAME=claude-4-sonnet-20250514
 # Tool mode: full / slim / none
 # TOOL_MODE=slim
 # Enable verbose debug logging
 VERBOSE=true
+MODEL_NAME=default_model
 ```
 Quindi scaricare i pacchetti:
 ```
