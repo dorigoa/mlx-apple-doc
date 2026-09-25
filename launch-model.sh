@@ -1,104 +1,3 @@
-# #!/bin/bash
-
-# usage() {
-#     echo "Usage: $0 <Qwen3.6-35B-A3B-UD-MLX|Qwen3.8-27B> -quant <4bit|8bit> [-think <0|1>] [-port <number>]"
-#     echo "  <Qwen3.6-35B-A3B-UD-MLX|Qwen3.8-27B>    Obbligatorio: precisione del modello"
-#     echo "  -think <0|1>    Opzionale: abilita il modo 'thinking' (default: 0)"
-#     echo "  -port <number>  Opzionale: porta server (default: 8080)"
-#     exit 1
-# }
-
-# if [ $# -lt 1 ]; then
-#     usage
-# fi
-
-# BIT_DEPTH=$1
-# shift
-
-# THINK_MODE=0
-# PORT=8080
-
-# while [[ $# -gt 0 ]]; do
-#   case $1 in
-#     Qwen3.6-35B-A3B-UD-MLX|Qwen3.8-27B)
-#       Mname="$1"
-#       shift
-#       ;;
-#     -quant)
-#       if [[ -n "$2" && "$2" =~ ^[4-8]bit$ ]]; then
-#         BIT_DEPTH="$2"
-#         shift 2
-#       else
-#         echo "Errore: -think richiede 0 o 1"
-#         exit 1
-#       fi
-#       ;;
-#     -think)
-#       if [[ -n "$2" && "$2" =~ ^[0-1]$ ]]; then
-#         THINK_MODE="$2"
-#         shift 2
-#       else
-#         echo "Errore: -think richiede 0 o 1"
-#         exit 1
-#       fi
-#       ;;
-#     -port)
-#       if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]]; then
-#         PORT="$2"
-#         shift 2
-#       else
-#         echo "Errore: -port richiede un numero"
-#         exit 1
-#       fi
-#       ;;
-#     *)
-#       echo "Errore: Argomento sconosciuto: $1"
-#       echo "Uso: $0 [4bit|8bit] -think [0|1] -port [numero]"
-#       exit 1
-#       ;;
-#   esac
-# done
-
-
-# if [[ "$BIT_DEPTH" != "4bit" && "$BIT_DEPTH" != "8bit" ]]; then
-#     echo "Error: First argument must be '4bit' or '8bit'"
-#     usage
-# fi
-
-# M="mlx-community/${Mname}-${BIT_DEPTH}"
-
-# eval "$(conda shell.bash hook)"
-# conda activate mlx
-
-# export HF_HUB_OFFLINE=1
-
-# [[ "$THINK_MODE" -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
-
-# echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_BOOL"
-
-# conda activate mlx
-# mlx.launch --verbose --backend jaccl --hostfile ./hosts.json --env MLX_METAL_FAST_SYNCH=1 -- \
-#   $HOME/miniforge3/envs/mlx/bin/python -m mlx_lm.server \
-#   --model $M \
-#   --host 0.0.0.0 --port $PORT \
-#   --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.0 \
-#   --max-tokens 16384 \
-#   #--chat-template ${Mname}.json \
-#   --chat-template-args "{\"enable_thinking\": $THINK_BOOL}"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #!/usr/bin/env bash
 
 readonly MODELS=("Qwen3.8-27B" "GLM-4.7-Flash" "Qwen3.6-35B-A3B", "Llama-3.3-70B-Instruct")
@@ -108,17 +7,17 @@ readonly PYTHON_BIN="${HOME}/miniforge3/envs/mlx/bin/python"
 
 usage() {
     cat >&2 <<EOF
-Uso: $(basename "$0") <modello> -quant <4bit|8bit> [-think <0|1>] [-port <1-65535>]
-  <modello>            Obbligatorio: $(IFS='|'; echo "${MODELS[*]}")
-  -quant <4bit|8bit>   Obbligatorio: quantizzazione
-  -think <0|1>         Opzionale: modalità thinking (default: 0)
-  -port <n>            Opzionale: porta del server (default: 8080)
-  -h                   Mostra questo aiuto
+Uso: $(basename "$0") <model> [-8bit] [-nothink] [-port <1-65535>]
+  <modello>  Mandatory: $(IFS='|'; echo "${MODELS[*]}")
+  -8bit      Optional: use 8bit quantization (default: 4bit)
+  -nothink   Optional: disable thinking (default enable)
+  -port <n>  Optional: listening port for API server(default: 8080)
+  -h         Show this help
 EOF
     exit "${1:-1}"
 }
 
-die() { echo "Errore: $*" >&2; exit 1; }
+die() { echo "Error: $*" >&2; exit 1; }
 
 is_model() {
     local m
@@ -127,18 +26,17 @@ is_model() {
 }
 
 MNAME=""
-BIT_DEPTH=""
-THINK_MODE=0
+BIT_DEPTH="4bit"
+THINK_MODE=1
 PORT=8080
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -quant)
-            [[ "${2:-}" =~ ^(4|8)bit$ ]] || die "-quant requires '4bit' or '8bit'"
-            BIT_DEPTH="$2"; shift 2 ;;
-        -think)
-            [[ "${2:-}" =~ ^[01]$ ]] || die "-think requires 0 or 1"
-            THINK_MODE="$2"; shift 2 ;;
+        -8bit)
+            BIT_DEPTH="8bit"; shift ;;
+        -nothink)
+            #[[ "${2:-}" =~ ^[01]$ ]] || die "-think requires 0 or 1"
+            THINK_MODE=0; shift ;;
         -port)
             [[ "${2:-}" =~ ^[0-9]{1,5}$ ]] && (( 10#$2 >= 1 && 10#$2 <= 65535 )) \
                 || die "-port requires an integer in the range 1024-65535"
@@ -155,7 +53,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -n "$MNAME" ]]      || { echo "Error: missing model" >&2; usage; }
-[[ -n "$BIT_DEPTH" ]]  || { echo "Error: missing -quant " >&2; usage; }
 [[ -f "$HOSTFILE" ]]   || die "hostfile not found: $HOSTFILE"
 [[ -x "$PYTHON_BIN" ]] || die "Python interpreter not found: $PYTHON_BIN"
 
