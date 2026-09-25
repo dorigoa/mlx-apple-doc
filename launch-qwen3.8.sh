@@ -34,13 +34,38 @@ shift
 THINK_MODE=0
 PORT=8080
 
-while getopts "t:p:" opt; do
-  case $opt in
-    t) THINK_MODE=$OPTARG ;;
-    p) PORT=$OPTARG ;;
-    *) usage ;;
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    4bit|8bit)
+      BIT_DEPTH="$1"
+      shift
+      ;;
+    -think)
+      if [[ -n "$2" && "$2" =~ ^[0-1]$ ]]; then
+        THINK_MODE="$2"
+        shift 2
+      else
+        echo "Errore: -think richiede 0 o 1"
+        exit 1
+      fi
+      ;;
+    -port)
+      if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]]; then
+        PORT="$2"
+        shift 2
+      else
+        echo "Errore: -port richiede un numero"
+        exit 1
+      fi
+      ;;
+    *)
+      echo "Errore: Argomento sconosciuto: $1"
+      echo "Uso: $0 [4bit|8bit] -think [0|1] -port [numero]"
+      exit 1
+      ;;
   esac
 done
+
 
 if [[ "$BIT_DEPTH" != "4bit" && "$BIT_DEPTH" != "8bit" ]]; then
     echo "Error: First argument must be '4bit' or '8bit'"
@@ -56,7 +81,8 @@ conda activate mlx
 export HF_HUB_OFFLINE=1
 
 #[[ $THINK_MODE -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
-if [ "$THINK_MODE" = "1" ]; then THINK_BOOL="true"; else THINK_BOOL="false"; fi
+#if [ "$THINK_MODE" = "1" ]; then THINK_BOOL="true"; else THINK_BOOL="false"; fi
+[[ "$THINK_MODE" -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
 echo "thinkmode=$THINK_MODE - thinkbool=$THINK_BOOL"
 
 echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_BOOL"
