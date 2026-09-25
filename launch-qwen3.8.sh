@@ -55,10 +55,12 @@ conda activate mlx
 
 export HF_HUB_OFFLINE=1
 
-echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_MODE"
-[[ $THINK_MODE -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
-
+#[[ $THINK_MODE -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
+if [ "$THINK_MODE" = "1" ]; then THINK_BOOL="true"; else THINK_BOOL="false"; fi
 echo "thinkbool=$THINK_BOOL"
+
+echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_BOOL"
+
 
 mlx.launch --verbose --backend jaccl --hostfile ./hosts.json --env MLX_METAL_FAST_SYNCH=1 -- \
   $HOME/miniforge3/envs/mlx/bin/python -m mlx_lm.server \
