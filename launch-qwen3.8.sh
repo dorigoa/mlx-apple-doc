@@ -88,6 +88,7 @@ echo "thinkmode=$THINK_MODE - thinkbool=$THINK_BOOL"
 echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_BOOL"
 
 #$HOME/miniforge3/envs/mlx/bin/python -m mlx_lm.server \
+conda activate mlx
 mlx.launch --verbose --backend jaccl --hostfile ./hosts.json --env MLX_METAL_FAST_SYNCH=1 -- \
   python -m mlx_lm server \
   --model $M \
