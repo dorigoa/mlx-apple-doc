@@ -285,6 +285,8 @@ chmod +x ~/mlx-dist/tp.sh
 Download del modello su entrambi i nodi, in parallelo da Mac1:
 
 ```bash
+export MLX_METAL_FAST_SYNCH=1
+export HF_HUB_OFFLINE=1
 M=mlx-community/Qwen3.6-27B-8bit
 hf download "$M" --quiet &
 ssh 192.168.20.2 "~/miniforge3/envs/mlx/bin/hf download $M --quiet" &
