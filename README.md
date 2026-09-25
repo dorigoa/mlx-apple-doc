@@ -52,7 +52,7 @@ sudo ifconfig en4 inet 192.168.20.2 netmask 255.255.255.0 mtu 9000
 Verifica jumbo frame da Mac1 (8972 = 9000 − 28 byte di header IP+ICMP, `-D` vieta la frammentazione):
 
 ```bash
-ping -c3 -D -s 8972 192.168.20.2
+ping -c3 -D -s 7168 192.168.20.2
 ```
 
 Alternativa automatica: `mlx.distributed_config --backend jaccl --hosts <h1>,<h2> --over thunderbolt --auto-setup --output hosts.json` configura rete e hostfile, ma richiede sudo senza password e usa l'IP di en0 per il rank 0.
