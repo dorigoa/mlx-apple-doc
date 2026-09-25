@@ -57,7 +57,7 @@ export HF_HUB_OFFLINE=1
 
 #[[ $THINK_MODE -eq 1 ]] && THINK_BOOL="true" || THINK_BOOL="false"
 if [ "$THINK_MODE" = "1" ]; then THINK_BOOL="true"; else THINK_BOOL="false"; fi
-echo "thinkbool=$THINK_BOOL"
+echo "thinkmode=$THINK_MODE - thinkbool=$THINK_BOOL"
 
 echo "Server launch: Model=$M, Port=$PORT, Thinking=$THINK_BOOL"
 
