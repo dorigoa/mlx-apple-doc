@@ -308,8 +308,15 @@ Risultati misurati:
 
 | Modello | Generazione (tok/s) | Picco per nodo (GB) |
 | --- | --- | --- |
-| mlx-community/Qwen3.6-27B-8bit | 22,4 | non rilevato |
-| mlx-community/Llama-3.2-1B-Instruct-4bit | 497,8 | 0,56 |
+|mlx-community/GLM-4.7-Flash-4bit||
+|mlx-community/GLM-4.7-Flash-8bit||
+|mlx-community/gpt-oss-120b-4bit||
+|mlx-community/gpt-oss-20b-MXFP4-Q4||
+|mlx-community/Llama-3.3-70B-Instruct-4bit||
+|mlx-community/Qwen3.8-27B-4bit||
+|mlx-community/Qwen3.8-27B-8bit||
+|unsloth/Qwen3.6-35B-A3B-MLX-8bit||
+|unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit||
 
 ## 9. Opzioni di tp\_generate.py
 
