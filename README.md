@@ -435,7 +435,7 @@ API_MODEL_NAME=claude-4-sonnet-20250514
 # Tool mode: full / slim / none
 # TOOL_MODE=slim
 # Enable verbose debug logging
-VERBOSE=true
+VERBOSE=false
 MODEL_NAME=default_model
 ```
 Quindi scaricare i pacchetti:
