@@ -64,7 +64,7 @@ eval "$(conda shell.bash hook)"  || die "conda init failed"
 conda activate mlx               || die "could not activated conda env 'mlx'"
 command -v mlx.launch >/dev/null 2>&1 || die "mlx.launch not found in 'mlx' env"
 
-export HF_HUB_OFFLINE=1
+export HF_HUB_OFFLINE=0
 
 echo "Server start: model=$MODEL, port=$PORT, thinking=$THINK_BOOL" >&2
 
@@ -79,5 +79,5 @@ server_args=(
 )
 
 exec mlx.launch --verbose --backend jaccl --hostfile "$HOSTFILE" \
-    --env MLX_METAL_FAST_SYNCH=1 --env HF_HUB_OFFLINE=1 \
+    --env MLX_METAL_FAST_SYNCH=1 --env HF_HUB_OFFLINE=0 \
     -- "$PYTHON_BIN" "${server_args[@]}"
