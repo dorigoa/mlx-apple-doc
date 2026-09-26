@@ -4,6 +4,12 @@ Patch idempotente per mlx-lm 0.31.3 (GenerationBatch._step): ogni N step di
 decode materializza anche lo stato della prompt cache, così le catene lazy non
 trattengono buffer Metal senza limite (rif. ml-explore/mlx-lm#1662).
 N = variabile d'ambiente MLX_LM_CACHE_EVAL_INTERVAL (default 64).
+
+Applica con:
+
+PY=/Volumes/Home/Alvise/miniforge3/envs/mlx/bin/python
+for h in 192.168.20.1 192.168.20.2; do echo "== $h"; ssh "$h" "$PY -" < patch_mlx_lm_cache_eval.py; done
+
 """
 import hashlib
 import importlib.util
