@@ -7,11 +7,12 @@ readonly PYTHON_BIN="${HOME}/miniforge3/envs/mlx/bin/python"
 
 usage() {
     cat >&2 <<EOF
-Uso: $(basename "$0") <model> [-8bit] [-nothink] [-port <1-65535>]
-  <modello>  Mandatory: $(IFS='|'; echo "${MODELS[*]}")
-  -8bit      Optional: use 8bit quantization (default: 4bit)
-  -nothink   Optional: disable thinking (default enable)
-  -port <n>  Optional: listening port for API server(default: 8080)
+Uso: $(basename "$0") <model> [-8bit] [-nothink] [-port <1-65535>] [-max-token <integer>]
+  <modello>       Mandatory: $(IFS='|'; echo "${MODELS[*]}")
+  -8bit           Optional: use 8bit quantization (default: 4bit)
+  -nothink        Optional: disable thinking (default enable)
+  -port <n>       Optional: listening port for API server(default: 8080)
+  -max-tokens <n> Optional: max number of tokens to be generated (default: 8192)
   -h         Show this help
 EOF
     exit "${1:-1}"
@@ -29,6 +30,8 @@ MNAME=""
 BIT_DEPTH="4bit"
 THINK_MODE=1
 PORT=8080
+MAX_TOKENS=8192
+LOG_LEVEL="INFO"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -41,6 +44,10 @@ while [[ $# -gt 0 ]]; do
             [[ "${2:-}" =~ ^[0-9]{1,5}$ ]] && (( 10#$2 >= 1 && 10#$2 <= 65535 )) \
                 || die "-port requires an integer in the range 1024-65535"
             PORT="$((10#$2))"; shift 2 ;;
+        -max-tokens)
+            MAX_TOKENS="$((10#$2))"; shift 2 ;;
+        -debug)
+            LOG_LEVEL="DEBUG"; shift ;;
         -h|--help)
             usage 0 ;;
         -*)
@@ -71,8 +78,8 @@ server_args=(
     --model "$MODEL"
     --host 0.0.0.0 --port "$PORT"
     --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.0
-    --max-tokens 16384
-    # --chat-template "${SCRIPT_DIR}/${MNAME}.json"
+    --max-tokens "$MAX_TOKENS"
+    --log-level "$LOG_LEVEL"
     --chat-template-args "{\"enable_thinking\": ${THINK_BOOL}}"
 )
 
