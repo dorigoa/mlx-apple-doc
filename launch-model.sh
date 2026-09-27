@@ -79,5 +79,5 @@ server_args=(
 )
 
 exec mlx.launch --verbose --backend jaccl --hostfile "$HOSTFILE" \
-    --env MLX_METAL_FAST_SYNCH=1 --env HF_HUB_OFFLINE=0 \
+    --env MLX_METAL_FAST_SYNCH=0 --env HF_HUB_OFFLINE=0 \
     -- "$PYTHON_BIN" "${server_args[@]}"
