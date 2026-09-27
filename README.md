@@ -154,7 +154,7 @@ mx.eval(x)
 print(f"rank {g.rank()}/{g.size()}: {x.tolist()}")
 EOF
 ssh 192.168.20.2 'mkdir -p ~/mlx-dist' && scp test_jaccl.py 192.168.20.2:mlx-dist/
-mlx.launch --verbose --backend jaccl --hostfile hosts.json --env MLX_METAL_FAST_SYNCH=1 -- \
+mlx.launch --verbose --backend jaccl --hostfile hosts.json --env MLX_METAL_FAST_SYNCH=0 -- \
   $HOME/miniforge3/envs/mlx/bin/python $HOME/mlx-dist/test_jaccl.py
 ```
 
@@ -272,7 +272,7 @@ cd "$HOME/mlx-dist"
 [[ -f hosts.json ]] || { echo "hosts.json mancante" >&2; exit 1; }
 [[ -f tp_generate.py ]] || { echo "tp_generate.py mancante" >&2; exit 1; }
 exec "$ENV/bin/mlx.launch" --backend jaccl --hostfile hosts.json \
-  --env MLX_METAL_FAST_SYNCH=1 --env HF_HUB_OFFLINE=1 -- \
+  --env MLX_METAL_FAST_SYNCH=0 --env HF_HUB_OFFLINE=1 -- \
   "$ENV/bin/python" "$HOME/mlx-dist/tp_generate.py" "$@"
 ```
 
@@ -280,12 +280,13 @@ exec "$ENV/bin/mlx.launch" --backend jaccl --hostfile hosts.json \
 chmod +x ~/mlx-dist/tp.sh
 ```
 
-`MLX_METAL_FAST_SYNCH=1` velocizza la sincronizzazione tra GPU e CPU. `HF_HUB_OFFLINE=1` evita controlli di rete verso Hugging Face e richiede il modello già scaricato.
+`MLX_METAL_FAST_SYNCH=1` velocizzerebbe la sincronizzazione tra GPU e CPU, ma non ho visto sensibili cambi di velocità di generazione; inoltre la doc ufficiale riporta possibili blocchi della GPU in quanto si tratta ancora di una feature sperimentale.
+`HF_HUB_OFFLINE=1` evita controlli di rete verso Hugging Face e richiede il modello già scaricato.
 
 Download del modello su entrambi i nodi, in parallelo da Mac1:
 
 ```bash
-export MLX_METAL_FAST_SYNCH=1
+export MLX_METAL_FAST_SYNCH=0
 export HF_HUB_OFFLINE=1
 M=mlx-community/Qwen3.6-27B-8bit
 hf download "$M" --quiet &
