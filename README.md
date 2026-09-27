@@ -17,7 +17,7 @@ Abilitazione RDMA, una volta per Mac:
 3. Esegui `rdma_ctl enable`.
 4. Riavvia normalmente.
 
-Verifica (su entrambi):
+Verifica (su entrambi i Mac):
 
 ```bash
 sw_vers -productVersion
@@ -36,7 +36,7 @@ Mac1 è il rank 0: da qui si lanciano tutti i job.
 | Mac1 (rank 0) | en3 | 192.168.20.1/24 | rdma\_en3 |
 | Mac2 (rank 1) | en4 | 192.168.20.2/24 | rdma\_en4 |
 
-Disattiva il Bridge Thunderbolt (consigliato dalla documentazione MLX anche se RDMA non usa TCP/IP), su entrambi:
+Disattiva il Bridge Thunderbolt (consigliato dalla documentazione MLX anche se RDMA non usa TCP/IP), su entrambi i Mac:
 
 ```bash
 sudo networksetup -setnetworkserviceenabled "Thunderbolt Bridge" off
@@ -63,7 +63,7 @@ Alternativa automatica: `mlx.distributed_config --backend jaccl --hosts <h1>,<h2
 
 L'ambiente deve essere identico e nello stesso percorso sui due Mac: `mlx.launch` avvia via SSH lo stesso eseguibile Python su entrambi.
 
-Installazione Miniforge (su entrambi, se assente):
+Installazione Miniforge (su entrambi i Mac, se assente):
 
 ```bash
 curl -fsSLO "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
@@ -72,7 +72,7 @@ bash "Miniforge3-$(uname)-$(uname -m).sh" -b -p "$HOME/miniforge3"
 exec "$SHELL" -l
 ```
 
-Ambiente e pacchetti (su entrambi, versioni fissate per riproducibilità):
+Ambiente e pacchetti (su entrambi i Mac, versioni fissate per riproducibilità):
 
 ```bash
 conda create -y -n mlx python=3.12
@@ -88,7 +88,7 @@ Atteso: `0.32.2 0.31.3` e percorso `$HOME/miniforge3/envs/mlx/bin/python` uguale
 
 Il comando `hf` fa parte del pacchetto `huggingface_hub`, già installato come dipendenza di mlx-lm.
 
-Aggiornamento e verifica (su entrambi, env `mlx` attivo):
+Aggiornamento e verifica (su entrambi i Mac, env `mlx` attivo):
 
 ```bash
 pip install -U huggingface_hub
@@ -98,7 +98,7 @@ python -c "import huggingface_hub; print(huggingface_hub.__version__)"
 
 Token: huggingface.co → Settings → Access Tokens → New token, tipo **Read**. Esportalo come `HF_TOKEN` nella shell.
 
-Login (su entrambi). Il token viene salvato in `~/.cache/huggingface/token` e resta valido anche nelle sessioni SSH non interattive, dove `HF_TOKEN` potrebbe non essere definito:
+Login (su entrambi i Mac). Il token viene salvato in `~/.cache/huggingface/token` e resta valido anche nelle sessioni SSH non interattive, dove `HF_TOKEN` potrebbe non essere definito:
 
 ```bash
 hf auth login --token "$HF_TOKEN"
@@ -121,7 +121,7 @@ La cache dei modelli è in `~/.cache/huggingface/hub`; si sposta con la variabil
 
 ## 5. SSH senza password
 
-Attiva "Login remoto" su entrambi: Impostazioni di Sistema → Generali → Condivisione.
+Attiva "Login remoto" su entrambi i Mac: Impostazioni di Sistema → Generali → Condivisione.
 
 Su Mac1 (il launcher si collega via SSH anche a sé stesso):
 
@@ -285,7 +285,7 @@ chmod +x ~/mlx-dist/tp.sh
 `MLX_METAL_FAST_SYNCH=1` velocizzerebbe la sincronizzazione tra GPU e CPU, ma non ho visto sensibili cambi di velocità di generazione; inoltre la doc ufficiale riporta possibili blocchi della GPU in quanto si tratta ancora di una feature sperimentale.
 `HF_HUB_OFFLINE=1` evita controlli di rete verso Hugging Face e richiede il modello già scaricato.
 
-Download del modello su entrambi i nodi, in parallelo da Mac1:
+Download del modello su entrambi i Mac, in parallelo da Mac1:
 
 ```bash
 export MLX_METAL_FAST_SYNCH=0
@@ -327,7 +327,7 @@ Risultati misurati:
 | --- | --- |
 | `--model REPO` | Repo Hugging Face o percorso locale (obbligatorio) |
 | `--prompt "…"` | Prompt inline |
-| `--prompt-file F` | Prompt da file, presente nello stesso percorso su entrambi i nodi |
+| `--prompt-file F` | Prompt da file, presente nello stesso percorso su entrambi i Mac |
 | `--system "…"` | Prompt di sistema |
 | `--max-tokens N` | Token massimi generati (default 512) |
 | `--no-think` | Disattiva il blocco di ragionamento, se il template lo supporta |
@@ -394,7 +394,7 @@ Gemma: nessuna architettura Gemma implementa `shard()` in mlx-lm 0.31.3. Alterna
 
 ## 11. Ottimizzazione e risoluzione problemi
 
-Più memoria GPU, su entrambi i nodi (non persiste al riavvio; 30000 MB lascia circa 6 GB a macOS, valore prudente stimato):
+Più memoria GPU, su entrambi i Mac (non persiste al riavvio; 30000 MB lascia circa 6 GB a macOS, valore prudente stimato):
 
 ```bash
 sudo sysctl iogpu.wired_limit_mb=30000
