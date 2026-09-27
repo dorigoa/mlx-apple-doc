@@ -2,6 +2,8 @@
 
 Sep 24, 2026 · @Alvise Dorigo
 
+Doc di riferimento: https://ml-explore.github.io/mlx/build/html/usage/distributed.html
+
 Configurazione verificata: 2× Mac Studio M4 Max 36 GB in Thunderbolt 5, mlx 0.32.2 + mlx-lm 0.31.3, backend JACCL (RDMA), tensor parallel su 2 nodi. Qwen3.6-27B-8bit genera 22,4 tok/s.
 
 ## 1. Prerequisiti e abilitazione RDMA
