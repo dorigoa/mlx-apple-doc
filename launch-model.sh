@@ -64,8 +64,6 @@ eval "$(conda shell.bash hook)"  || die "conda init failed"
 conda activate mlx               || die "could not activated conda env 'mlx'"
 command -v mlx.launch >/dev/null 2>&1 || die "mlx.launch not found in 'mlx' env"
 
-export HF_HUB_OFFLINE=0
-
 echo "Server start: model=$MODEL, port=$PORT, thinking=$THINK_BOOL" >&2
 
 server_args=(
