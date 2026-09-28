@@ -13,6 +13,7 @@ Uso: $(basename "$0") <model> [-8bit] [-nothink] [-port <1-65535>] [-max-token <
   -nothink        Optional: disable thinking (default enable)
   -port <n>       Optional: listening port for API server(default: 8080)
   -max-tokens <n> Optional: max number of tokens to be generated (default: 8192)
+  -debug          Optional: show debug messages
   -h         Show this help
 EOF
     exit "${1:-1}"
