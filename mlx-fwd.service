@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Type=exec
 Environment=LISTEN_ADDR=127.0.0.1
-Environment=LISTEN_PORT=18080
+Environment=LISTEN_PORT=8080
 Environment=TARGET=192.168.1.101:8080
 ExecStart=/usr/bin/socat -d TCP4-LISTEN:${LISTEN_PORT},bind=${LISTEN_ADDR},fork,reuseaddr,keepalive TCP4:${TARGET},keepalive
 Restart=always
