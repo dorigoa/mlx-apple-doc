@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+
+execute with: /Volumes/Home/Alvise/miniforge3/envs/mlx/bin/python mlx_leak_shim.py --self-test
+
 mlx_leak_shim.py - avvia mlx_lm.server con una patch al leak di buffer Metal
 dei modelli ibridi (ArraysCache: qwen3_5 / Qwen3.6 / Qwen3.8, qwen3_next, ...).
 
