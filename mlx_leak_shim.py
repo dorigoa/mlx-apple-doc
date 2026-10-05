@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """
 
-execute with: /Volumes/Home/Alvise/miniforge3/envs/mlx/bin/python mlx_leak_shim.py --self-test
+execute on both mac nodes: /Volumes/Home/Alvise/miniforge3/envs/mlx/bin/python mlx_leak_shim.py --self-test
+
+expected output:
+
+--- fase unpatched ---
+    CRASH allo step 10395: [metal::malloc] Resource limit (499000) exceeded.
+--- fase patched ---
+    OK: 12000 step x 48 layer, valori corretti
+    [leak-shim] rank=? patch applicata (mlx-lm 0.31.3)
+PASS: leak riprodotto senza patch, assente con la patch
+
+----------------
 
 mlx_leak_shim.py - avvia mlx_lm.server con una patch al leak di buffer Metal
 dei modelli ibridi (ArraysCache: qwen3_5 / Qwen3.6 / Qwen3.8, qwen3_next, ...).
